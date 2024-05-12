@@ -6,10 +6,15 @@ $con = mysqli_connect("localhost", "root", "", "lpbd");
 
 $return = '';
 
-$sql = sprintf("SELECT VALIDATE_LOGIN('%s', '%s') AS $return", $link_id->real_escape_string($username), $link_id->real_escape_string($password));
-$result = mysqli_query($con,$sql);
+$stmt = mysqli_prepare($conn, sprintf("CALL VALIDATE_LOGIN('%s', '%s')", $link_id->real_escape_string($username), $link_id->real_escape_string($password)));
+mysqli_stmt_execute($stmt);
 
-echo $return;
+$result = mysqli_stmt_get_result($stmt);
 
-echo $csv;
+mysqli_stmt_close($stmt);
+mysqli_close($conn);
+
+$return = mysqli_fetch_row($result);
+
+echo $return[0];
 ?>
