@@ -1,18 +1,18 @@
 <?php
 $username = $_POST["username"];
-$password = hash('sha256', substr($username, 0, 3) . $_POST["username"]);
+$password = hash('sha256', substr($username, 0, 3) . $_POST["password"]);
 
-$con = mysqli_connect("localhost", "root", "", "lpbd");
+$link_id = mysqli_connect("localhost", "root", "", "lpbd");
 
 $return = '';
 
-$stmt = mysqli_prepare($conn, sprintf("CALL VALIDATE_LOGIN('%s', '%s')", $link_id->real_escape_string($username), $link_id->real_escape_string($password)));
+$stmt = mysqli_prepare($link_id, sprintf("SELECT VALIDATE_LOGIN('%s', '%s')", $link_id->real_escape_string($username), $link_id->real_escape_string($password)));
 mysqli_stmt_execute($stmt);
 
 $result = mysqli_stmt_get_result($stmt);
 
 mysqli_stmt_close($stmt);
-mysqli_close($conn);
+mysqli_close($link_id);
 
 $return = mysqli_fetch_row($result);
 
